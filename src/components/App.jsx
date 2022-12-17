@@ -80,26 +80,30 @@ function App() {
   }, [loggedIn, history, email]);
 
   useEffect(() => {
-    api
-      .getInitialProfileData()
-      .then((result) => {
-        setCurrentUser(result);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
+    if (loggedIn === true) {
+      api
+        .getInitialProfileData()
+        .then((result) => {
+          setCurrentUser(result);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [loggedIn]);
 
   useEffect(() => {
-    api
-      .getInitialGallery()
-      .then((result) => {
-        setCards(result);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
+    if (loggedIn === true) {
+      api
+        .getInitialGallery()
+        .then((result) => {
+          setCards(result);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [loggedIn]);
 
   function handleCardLike(card) {
     const isLiked = card.likes.some((i) => i._id === currentUser._id);
@@ -180,14 +184,17 @@ function App() {
 
   const handleLoginSubmit = (user) => {
     auth
-      .authorize(user)
+      .authorize(user.email, user.password)
       .then((res) => {
         localStorage.setItem("token", res.token);
         handleLogin();
       })
       .then(() => history.push("/"))
       .catch((err) => {
-        return console.log(err);
+        setIsSuccessReq(false);
+        setText("Что-то пошло не так! Попробуйте ещё раз.");
+        handleOpenInfoTooltip()
+        console.log(err);
       });
   };
 
@@ -234,7 +241,7 @@ function App() {
             <Register onSubmit={handleSubmitRegistration} />
           </Route>
           <Route path="/sign-in">
-            <Login handleLogin={handleLoginSubmit} />
+            <Login onSubmit={handleLoginSubmit} />
           </Route>
           <Route>
             {loggedIn ? <Redirect to="/" /> : <Redirect to="/sign-in" />}

@@ -49,7 +49,7 @@ function Register({ onSubmit }) {
         </fieldset>
       </form>
       <p className="auth__caption">
-        Уже зарегистрированы? <Link to="/sign-in">Войти</Link>
+        Уже зарегистрированы? <Link className="auth__link" to="/sign-in">Войти</Link>
       </p>
     </div>
   );

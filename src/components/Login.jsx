@@ -7,7 +7,7 @@ function Login({ onSubmit }) {
     const { name, value } = evt.target;
     setUser({
       ...user,
-      [name]: value,
+      [name]: value.toLowerCase(),
     });
   };
 
